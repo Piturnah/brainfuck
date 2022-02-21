@@ -28,11 +28,11 @@
 #include <assert.h>
 #include <string.h>
 
-#define memCapacity 1024
+#define memCapacity 30000
 int mem[memCapacity];
 
 #define stackCapacity 1024
-char* retStack[1024];
+char* retStack[stackCapacity];
 int retStackSize = 0;
 
 void usage()
@@ -40,6 +40,7 @@ void usage()
     printf("USAGE: ./brain <program>\n");
     printf("FLAGS\n");
     printf("    -d - enters debug mode\n");
+    printf("    -s - enters step mode\n");
 }
 
 int main(int argc, char *argv[])
@@ -60,11 +61,22 @@ int main(int argc, char *argv[])
     }
 
     int debug = 0;
+    int step = 0;
     for (int i = 2; i < argc; i++)
     {
 	if (strcmp(argv[i], "-d") == 0)
 	{
 	    debug = 1;
+	}
+	else if (strcmp(argv[i], "-s") == 0)
+	{
+	    step = 1;
+	}
+	else
+	{
+	    fprintf(stderr, "ERROR: Didn't recognise argument `%s`\n", argv[i]);
+	    usage();
+	    return 1;
 	}
     }
 
@@ -74,15 +86,15 @@ int main(int argc, char *argv[])
     long fsize = ftell(fptr);
     fseek(fptr, 0, SEEK_SET);
 
-    char *content = malloc(fsize + 1);
-    fread(content, fsize, 1, fptr);
+    char *program = malloc(fsize + 1);
+    fread(program, fsize, 1, fptr);
     fclose(fptr);
 
-    content[fsize] = 0;
+    program[fsize] = 0;
 
-    while (*content != 0)
+    while (*program != 0)
     {
-	switch(*content++)
+	switch(*program++)
 	{
 	case (int)'+':
 	    mem[dataPtr]++;
@@ -108,7 +120,7 @@ int main(int argc, char *argv[])
 		int stackSize = 1;
 		while (stackSize != 0)
 		{
-		    switch(*content++)
+		    switch(*program++)
 		    {
 		    case (int)'[':
 			stackSize++;
@@ -121,17 +133,35 @@ int main(int argc, char *argv[])
 	    }
 	    else
 	    {
-		retStack[retStackSize++] = content - 1;
+		retStack[retStackSize++] = program - 1;
 	    }
 	    break;
 	case (int)']':
-	    content = retStack[--retStackSize];
+	    program = retStack[--retStackSize];
 	    break;
 	}
 
 	if (debug)
 	{
-	    printf(" %c -> %d @ %d\n", *(content-1), mem[dataPtr], dataPtr);
+	    char ptrHere(int index)
+	    {
+		if (dataPtr == index)
+		{
+		    return '^';
+		}
+		else
+		{
+		    return ' ';
+		}
+	    }
+
+	    printf("\n %c to\n", *(program));
+	    printf("%2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d\n", mem[0], mem[1], mem[2], mem[3], mem[4], mem[5], mem[6], mem[7], mem[8], mem[9]);
+	    printf("%2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c\n", ptrHere(0), ptrHere(1), ptrHere(2), ptrHere(3), ptrHere(4), ptrHere(5), ptrHere(6), ptrHere(7), ptrHere(8), ptrHere(9));
+	}
+	if (step)
+	{
+	    getchar();
 	}
     }
 
