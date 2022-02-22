@@ -39,7 +39,7 @@ void usage()
 {
     printf("USAGE: ./brain <program>\n");
     printf("FLAGS\n");
-    printf("    -d - enters debug mode\n");
+    printf("    -d <?memcap> - enters debug mode with optional argument for memory capacity\n");
     printf("    -s - enters step mode\n");
 }
 
@@ -61,12 +61,18 @@ int main(int argc, char *argv[])
     }
 
     int debug = 0;
+    int debugMemCapacity = 15;
     int step = 0;
     for (int i = 2; i < argc; i++)
     {
 	if (strcmp(argv[i], "-d") == 0)
 	{
 	    debug = 1;
+	    if (i + 1 != argc && (debugMemCapacity = atoi(argv[++i])) == 0)
+	    {
+		debugMemCapacity = 15;
+		i--;
+	    }
 	}
 	else if (strcmp(argv[i], "-s") == 0)
 	{
@@ -156,8 +162,19 @@ int main(int argc, char *argv[])
 	    }
 
 	    printf("\n %c to\n", *(program));
-	    printf("%2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d | %2d\n", mem[0], mem[1], mem[2], mem[3], mem[4], mem[5], mem[6], mem[7], mem[8], mem[9]);
-	    printf("%2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c | %2c\n", ptrHere(0), ptrHere(1), ptrHere(2), ptrHere(3), ptrHere(4), ptrHere(5), ptrHere(6), ptrHere(7), ptrHere(8), ptrHere(9));
+
+	    char memOutBuff[debugMemCapacity * 5 + 1], pointerLocBuff[debugMemCapacity * 5 + 1];
+	    // TODO: investigate safety of this
+	    memset(memOutBuff, 0, debugMemCapacity * 5 + 2);
+	    memset(pointerLocBuff, 0, debugMemCapacity * 5 + 2);
+	    for (int i = 0; i < debugMemCapacity; i++)
+	    {
+		sprintf(&memOutBuff[i * 5], "|%3d ", mem[i]);
+		sprintf(&pointerLocBuff[i * 5], "| %2c ", ptrHere(i));
+	    }
+	    memOutBuff[debugMemCapacity * 5] = '|';
+	    pointerLocBuff[debugMemCapacity * 5] = '|';
+	    printf("%s\n%s\n", memOutBuff, pointerLocBuff);
 	}
 	if (step)
 	{
