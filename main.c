@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 		}
 	    }
 
-	    printf("\n %c to\n", *(program));
+	    printf("\n %c to\n", *(program-1));
 
 	    char memOutBuff[debugMemCapacity * 5 + 1], pointerLocBuff[debugMemCapacity * 5 + 1];
 	    // TODO: investigate safety of this
