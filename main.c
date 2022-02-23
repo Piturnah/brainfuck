@@ -29,7 +29,7 @@
 #include <string.h>
 
 #define memCapacity 30000
-int mem[memCapacity];
+char mem[memCapacity];
 
 #define stackCapacity 1024
 char* retStack[stackCapacity];
