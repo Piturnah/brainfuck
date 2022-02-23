@@ -35,9 +35,9 @@ int mem[memCapacity];
 char* retStack[stackCapacity];
 int retStackSize = 0;
 
-void usage()
+void usage(char *execName)
 {
-    printf("USAGE: ./brain <program>\n");
+    printf("USAGE: %s <program>\n", execName);
     printf("FLAGS\n");
     printf("    -d <?memcap> - enters debug mode with optional argument for memory capacity\n");
     printf("    -s - enters step mode\n");
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
 	fprintf(stderr, "ERROR: NO PROGRAM SOURCE PROVIDED\n");
-	usage();
+	usage(argv[0]);
 	return 1;
     }
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     if ((fptr = fopen(argv[1], "r")) == NULL)
     {
 	fprintf(stderr, "ERROR: Could not open file %s\n", argv[1]);
-	usage();
+	usage(argv[0]);
 	return 1;
     }
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 	else
 	{
 	    fprintf(stderr, "ERROR: Didn't recognise argument `%s`\n", argv[i]);
-	    usage();
+	    usage(argv[0]);
 	    return 1;
 	}
     }
