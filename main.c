@@ -146,21 +146,9 @@ int main(int argc, char *argv[])
 	    program = retStack[--retStackSize];
 	    break;
 	}
-
+	
 	if (debug)
 	{
-	    char ptrHere(int index)
-	    {
-		if (dataPtr == index)
-		{
-		    return '^';
-		}
-		else
-		{
-		    return ' ';
-		}
-	    }
-
 	    printf("\n %c to\n", *(program-1));
 
 	    char memOutBuff[debugMemCapacity * 5 + 1], pointerLocBuff[debugMemCapacity * 5 + 1];
@@ -170,7 +158,7 @@ int main(int argc, char *argv[])
 	    for (int i = 0; i < debugMemCapacity; i++)
 	    {
 		sprintf(&memOutBuff[i * 5], "|%3d ", mem[i]);
-		sprintf(&pointerLocBuff[i * 5], "| %2c ", ptrHere(i));
+		sprintf(&pointerLocBuff[i * 5], "| %2c ", (dataPtr == i) ? '^' : ' ');
 	    }
 	    memOutBuff[debugMemCapacity * 5] = '|';
 	    pointerLocBuff[debugMemCapacity * 5] = '|';
