@@ -10,3 +10,6 @@ Simple brainfuck interpreter written in C. There are many like it, but this one 
 $ gcc ./main.c
 $ ./a.out hello.bf
 ```
+## Contributing
+
+PRs and issues welcome.
