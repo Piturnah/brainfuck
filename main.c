@@ -45,16 +45,14 @@ void usage(char *execName)
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
+    if (argc < 2) {
 	fprintf(stderr, "ERROR: NO PROGRAM SOURCE PROVIDED\n");
 	usage(argv[0]);
 	return 1;
     }
 
     FILE *fptr;
-    if ((fptr = fopen(argv[1], "r")) == NULL)
-    {
+    if ((fptr = fopen(argv[1], "r")) == NULL) {
 	fprintf(stderr, "ERROR: Could not open file %s\n", argv[1]);
 	usage(argv[0]);
 	return 1;
@@ -63,23 +61,18 @@ int main(int argc, char *argv[])
     int debug = 0;
     int debugMemCapacity = 15;
     int step = 0;
-    for (int i = 2; i < argc; i++)
-    {
-	if (strcmp(argv[i], "-d") == 0)
-	{
+    for (int i = 2; i < argc; i++) {
+	if (strcmp(argv[i], "-d") == 0) {
 	    debug = 1;
-	    if (i + 1 != argc && (debugMemCapacity = atoi(argv[++i])) == 0)
-	    {
+	    if (i + 1 != argc && (debugMemCapacity = atoi(argv[++i])) == 0) {
 		debugMemCapacity = 15;
 		i--;
 	    }
 	}
-	else if (strcmp(argv[i], "-s") == 0)
-	{
+	else if (strcmp(argv[i], "-s") == 0) {
 	    step = 1;
 	}
-	else
-	{
+	else {
 	    fprintf(stderr, "ERROR: Didn't recognise argument `%s`\n", argv[i]);
 	    usage(argv[0]);
 	    return 1;
@@ -98,8 +91,7 @@ int main(int argc, char *argv[])
 
     program[fsize] = 0;
 
-    while (*program != 0)
-    {
+    while (*program != 0) {
 	switch(*program++)
 	{
 	case (int)'+':
@@ -147,16 +139,14 @@ int main(int argc, char *argv[])
 	    break;
 	}
 	
-	if (debug)
-	{
+	if (debug) {
 	    printf("\n %c to\n", *(program-1));
 
 	    char memOutBuff[debugMemCapacity * 5 + 1], pointerLocBuff[debugMemCapacity * 5 + 1];
 	    // TODO: investigate safety of this
 	    memset(memOutBuff, 0, debugMemCapacity * 5 + 2);
 	    memset(pointerLocBuff, 0, debugMemCapacity * 5 + 2);
-	    for (int i = 0; i < debugMemCapacity; i++)
-	    {
+	    for (int i = 0; i < debugMemCapacity; i++) {
 		sprintf(&memOutBuff[i * 5], "|%3d ", mem[i]);
 		sprintf(&pointerLocBuff[i * 5], "| %2c ", (dataPtr == i) ? '^' : ' ');
 	    }
@@ -164,8 +154,7 @@ int main(int argc, char *argv[])
 	    pointerLocBuff[debugMemCapacity * 5] = '|';
 	    printf("%s\n%s\n", memOutBuff, pointerLocBuff);
 	}
-	if (step)
-	{
+	if (step) {
 	    getchar();
 	}
     }
